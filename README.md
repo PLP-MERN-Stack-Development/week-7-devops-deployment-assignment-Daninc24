@@ -23,7 +23,7 @@ This is a full MERN stack application deployed with CI/CD, environment-based con
 
 ## Live Demo
 
-- **Frontend:** [https://your-frontend-url.vercel.app](https://your-frontend-url.vercel.app)
+- **Frontend:** [https://week-7-devops-deployment-assi-git-9b4229-daniel-mailus-projects.vercel.app/](https://week-7-devops-deployment-assi-git-9b4229-daniel-mailus-projects.vercel.app/)
 - **Backend API:** [https://your-backend-url.onrender.com/api/notes](https://your-backend-url.onrender.com/api/notes)
 
 ---
@@ -89,7 +89,6 @@ npm run dev
 ```
 PORT=5000
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/myapp?retryWrites=true&w=majority
-JWT_SECRET=your_jwt_secret
 CLIENT_URL=http://localhost:5173
 ```
 
@@ -102,49 +101,42 @@ VITE_API_URL=http://localhost:5000
 
 ## CI/CD Pipeline
 
-- **CI:** `.github/workflows/ci.yml` runs lint and tests on every push and PR.
-- **CD:** `.github/workflows/deploy.yml` auto-deploys to Render (or your chosen platform) on push to `main`.
-
-**Example Workflow:**
-```yaml
-name: CI
-
-on: [push, pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npm install
-      - run: npm run lint
-      - run: npm test
-```
+- **CI/CD:** `.github/workflows/mern-ci-cd.yml` runs build, deploy, and health checks on every push to `main`.
+- **Frontend and backend are deployed automatically on push.**
 
 ---
 
 ## Deployment
 
-### Frontend
-- Deployed to Vercel/Netlify.
-- Build command: `npm run build`
-- Output directory: `dist`
-- Set environment variables in the platform dashboard.
+### Frontend (Vercel)
+1. Go to [Vercel](https://vercel.com/) and log in with your GitHub account.
+2. Click **Add New Project** and import your frontend repo.
+3. Set the build command to `npm run build` and the output directory to `dist`.
+4. Set the environment variable `VITE_API_URL` to your backend's deployed URL.
+5. (Optional) Add a `vercel.json` file to your frontend directory for SPA routing:
+   ```json
+   {
+     "rewrites": [
+       { "source": "/(.*)", "destination": "/" }
+     ]
+   }
+   ```
+6. Deploy and visit: [https://week-7-devops-deployment-assi-git-9b4229-daniel-mailus-projects.vercel.app/](https://week-7-devops-deployment-assi-git-9b4229-daniel-mailus-projects.vercel.app/)
 
-### Backend
-- Deployed to Render/Railway/Heroku.
-- Set environment variables (`PORT`, `MONGO_URI`, etc.) in the platform dashboard.
-- Serves static frontend from `frontend/dist` in production.
+### Backend (Render/Railway/Heroku)
+1. Go to your chosen backend platform and create a new web service.
+2. Connect your GitHub repo and select the backend folder.
+3. Set environment variables (`PORT`, `MONGO_URI`, `CLIENT_URL`) in the platform dashboard.
+4. Set the start command to `npm start` or `node server.js`.
+5. Deploy and note the backend URL for use in the frontend's `VITE_API_URL`.
 
 ---
 
 ## Monitoring & Maintenance
 
-- **Health Check:** `GET /health` returns `OK`
+- **Health Check:**
+  - Backend: `GET /health` returns `OK`
+  - Frontend: `GET /ping` returns `pong`
 - **Monitoring Tools:** (Describe what you use, e.g., UptimeRobot, Sentry, LogRocket)
 - **Database Backups:** Enabled in MongoDB Atlas
 - **Security:** Use `npm audit` and Dependabot for vulnerability checks
