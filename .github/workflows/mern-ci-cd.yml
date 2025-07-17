@@ -155,3 +155,13 @@ jobs:
           url: ${{ secrets.FRONTEND_URL }}
           max-attempts: 3
           retry-delay: 5s
+
+      - name: Debug frontend with curl
+        run: |
+          curl -I ${{ secrets.FRONTEND_URL }} || true
+
+      - name: Resilient frontend health check
+        run: |
+          for i in {1..5}; do
+            curl -f ${{ secrets.FRONTEND_URL }} && break || sleep 5
+          done
