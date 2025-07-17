@@ -34,15 +34,6 @@ app.get('/health', (req, res) => res.status(200).send('OK'));
 
 app.use('/api/notes', noteRoutes);
 
-// Serve static frontend (if built)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const clientDist = path.join(__dirname, '../../frontend/dist');
-app.use(express.static(clientDist));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(clientDist, 'index.html'));
-});
-
 // Error middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
