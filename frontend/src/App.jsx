@@ -14,6 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/notes" element={<Notes />} />
+          {/* Public health check route */}
+          <Route path="/ping" element={<div>pong</div>} />
         </Routes>
       </Suspense>
     </Router>
